@@ -2,3 +2,7 @@ __pycache__/
 .idea/
 *.exe
 *.pyc
+.venv-build/
+build/
+dist/
+*.spec
