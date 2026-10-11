@@ -193,14 +193,18 @@ def Funcion(Fichero,Lista_Variaciones,Escenarios,Años,Hora,Impresion,Ruta_Pdfs,
                 Lista_Cargabilidades.append(0)
         return(Lista_Cargabilidades) 
 
+    Elementos_Perdidas=[]   # se llena en el primer caso y se reutiliza (los elementos no cambian)
+
     def Definir_Perdidas(red):
         Lista_Nombres_Perdidas=[]
         Lista_Perdidas_2=[]
         Lista_Potencia_Perdidas=[]
         Total_Perdidas=0 
-        Tr2_Calculo=app.GetCalcRelevantObjects('*.ElmTr2')
-        Tr3_Calculo=app.GetCalcRelevantObjects('*.ElmTr3')
-        Lineas_Calculo=app.GetCalcRelevantObjects('*.ElmLne')
+        if not Elementos_Perdidas:
+            Elementos_Perdidas.extend([app.GetCalcRelevantObjects('*.ElmTr2'),
+                                       app.GetCalcRelevantObjects('*.ElmTr3'),
+                                       app.GetCalcRelevantObjects('*.ElmLne')])
+        Tr2_Calculo, Tr3_Calculo, Lineas_Calculo = Elementos_Perdidas
         for i in Tr3_Calculo:
             if i.GetAttribute('outserv')==0:
                 try:  
@@ -313,15 +317,13 @@ def Funcion(Fichero,Lista_Variaciones,Escenarios,Años,Hora,Impresion,Ruta_Pdfs,
                     if f==0:
                         Lista_Perdidas,Lista_Nombres_Perdidas,Lista_Perdidas_2,\
                                     Lista_Potencia_Perdidas=Definir_Perdidas(red)
-                        Lista_Tensiones_pu,Lista_Tensiones_V=Tensiones_Nodos(Nodos)
                         Diccionario_Perdidas[Texto]=Lista_Perdidas
                         Diccionario_Perdidas_2[Texto + '_Nombre']=Lista_Nombres_Perdidas
                         Diccionario_Perdidas_2[Texto + '_Loss']=Lista_Perdidas_2
                         Diccionario_Perdidas_2[Texto + '_P']=Lista_Potencia_Perdidas
                         Diccionario_Tensiones_2[Texto+ '_pu']=Lista_Tensiones_pu
                         Diccionario_Tensiones_2[Texto+ '_kV']=Lista_Tensiones_V
-                        Lista_Cargabilidades_2=Definir_Cargabilidades(Cargabilidades)
-                        Diccionario_Cargabilidades_2[Texto]=Lista_Cargabilidades_2
+                        Diccionario_Cargabilidades_2[Texto]=Lista_Cargabilidades
                 if Contingencia!='Sin Contingencias':
                     Contingencia.outserv=0 
         return(Diccionario_Tensiones,Diccionario_Cargabilidades,Diccionario_Perdidas,\

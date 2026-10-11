@@ -22,33 +22,31 @@ def Funcion(Fichero):
         nombre_columna = Circuitos.columns[i]
         Diccionario_Caracteristicas[nombre_columna]=abs(Circuitos[nombre_columna]).max()
 
+    # Se consultan las características y nodos una sola vez (antes, una búsqueda en toda la base por carga)
+    Caracteristicas = config_powerfactory.indexar_por_nombre(Folder_Caracteristicas.GetContents('*.ChaTime'))
+    Buses = config_powerfactory.indexar_por_nombre(app.GetCalcRelevantObjects('*.ElmTerm'))
+    Contadores = {}
     for i, Carga in Cargas.iterrows():
         Tipo_Activa=Carga['Circuito_Activa']
         Tipo_Reactiva=Carga['Circuito_Reactiva']
         Pmax_Circuito=Diccionario_Caracteristicas[Tipo_Activa]
         Qmax_Circuito=Diccionario_Caracteristicas[Tipo_Reactiva]
-        Cha_Activa=Folder_Caracteristicas.GetContents(Tipo_Activa + '.ChaTime')[0]
-        Cha_Reactiva=Folder_Caracteristicas.GetContents(Tipo_Reactiva + '.ChaTime')[0]
+        Cha_Activa=config_powerfactory.buscar(Caracteristicas, Tipo_Activa, 'la característica de tiempo')
+        Cha_Reactiva=config_powerfactory.buscar(Caracteristicas, Tipo_Reactiva, 'la característica de tiempo')
         P_Max=Pmax_Circuito*Carga['%_Activa']
         Q_Max=Qmax_Circuito*Carga['%_Reactiva'] 
         Nueva_Carga= red.CreateObject('ElmLod', Carga['NOMBRE'])
         Nueva_Carga.plini=P_Max
         Nueva_Carga.qlini=Q_Max
         Nombre_Bus_Carga=Carga['Nodo']
-        try:
-            Bus_Carga=app.GetCalcRelevantObjects(Carga['Nodo'] + '.ElmTerm')[0]
-        except:
-            Bus_Carga='NaN'
-        if Bus_Carga!='NaN':    
-            Cubs_Carga=Bus_Carga.GetContents()
-            N_Cubs_Carga=len(Cubs_Carga)
-            texto_Cub_Carga = "Cub_" + str(N_Cubs_Carga+1)
+        Bus_Carga=Buses.get(Nombre_Bus_Carga) if isinstance(Nombre_Bus_Carga, str) else None
+        if Bus_Carga is not None:
+            texto_Cub_Carga = config_powerfactory.siguiente_cubiculo(Bus_Carga, Contadores)
             Cub_Carga=Bus_Carga.CreateObject('StaCubic',texto_Cub_Carga)
             Nueva_Carga.bus1=Cub_Carga 
             refObj = Nueva_Carga.CreateObject('ChaRef','plini')
             refObj.typ_id = Cha_Activa
             refObj = Nueva_Carga.CreateObject('ChaRef','qlini')
-            app.PrintPlain(Nueva_Carga)
             refObj.typ_id = Cha_Reactiva    
             
 

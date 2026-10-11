@@ -203,20 +203,21 @@ class App:
         print(Valor)
         if Valor !=None:
             messagebox.showinfo('Proyecto Activo', ' Puede empezar a crear la red en el proyecto Activo')
-            import Tipo_Lineas
-            Tipo_Lineas.Funcion(self.Nombre_Fichero)
-            import Tipo_Transformadores
-            Tipo_Transformadores.Funcion(self.Nombre_Fichero)
-            import Caracteristicas_Tiempo
-            Caracteristicas_Tiempo.Funcion(self.Nombre_Fichero)
-            import Nodos
-            Nodos.Funcion(self.Nombre_Fichero)
-            import Lineas
-            Lineas.Funcion(self.Nombre_Fichero)
-            import Transformadores
-            Transformadores.Funcion(self.Nombre_Fichero)
-            import Cargas
-            Cargas.Funcion(self.Nombre_Fichero)
+            with config_powerfactory.modo_rapido(app, 'Construir red'):
+                import Tipo_Lineas
+                Tipo_Lineas.Funcion(self.Nombre_Fichero)
+                import Tipo_Transformadores
+                Tipo_Transformadores.Funcion(self.Nombre_Fichero)
+                import Caracteristicas_Tiempo
+                Caracteristicas_Tiempo.Funcion(self.Nombre_Fichero)
+                import Nodos
+                Nodos.Funcion(self.Nombre_Fichero)
+                import Lineas
+                Lineas.Funcion(self.Nombre_Fichero)
+                import Transformadores
+                Transformadores.Funcion(self.Nombre_Fichero)
+                import Cargas
+                Cargas.Funcion(self.Nombre_Fichero)
             self.GCheckBox_2.invoke()
             
         else:

@@ -65,3 +65,69 @@ def preparar_powerfactory():
 
 
 RUTA_PYD = preparar_powerfactory()
+
+
+# ---------------------------------------------------------------------------
+# Utilidades de velocidad
+# ---------------------------------------------------------------------------
+import contextlib
+import time
+
+
+def indexar_por_nombre(objetos):
+    """{loc_name: objeto}. Si hay nombres repetidos queda el primero (igual que [0])."""
+    indice = {}
+    for objeto in objetos:
+        indice.setdefault(objeto.loc_name, objeto)
+    return indice
+
+
+def buscar(indice, nombre, descripcion):
+    """Objeto por nombre, con un mensaje claro si no existe."""
+    try:
+        return indice[nombre]
+    except KeyError:
+        raise KeyError("No existe %s '%s' en el modelo de PowerFactory" % (descripcion, nombre)) from None
+
+
+def siguiente_cubiculo(bus, contadores):
+    """Nombre 'Cub_N' del siguiente cubículo del nodo sin releer su contenido cada vez."""
+    clave = bus.loc_name
+    if clave not in contadores:
+        contadores[clave] = len(bus.GetContents())
+    contadores[clave] += 1
+    return 'Cub_' + str(contadores[clave])
+
+
+@contextlib.contextmanager
+def modo_rapido(app, nombre='Proceso'):
+    """Silencia el eco de comandos y la actualización de pantalla mientras dura el bloque.
+
+    Cada llamada es opcional: si esa versión de PowerFactory no la tiene se omite.
+    Al terminar imprime el tiempo total en la ventana de salida.
+    """
+    reversas = []
+    for activar, desactivar in (('EchoOff', 'EchoOn'),):
+        try:
+            getattr(app, activar)()
+            reversas.append((desactivar,))
+        except Exception:
+            pass
+    try:
+        app.SetGuiUpdateEnabled(0)
+        reversas.append(('SetGuiUpdateEnabled', 1))
+    except Exception:
+        pass
+    inicio = time.perf_counter()
+    try:
+        yield
+    finally:
+        for paso in reversas:
+            try:
+                getattr(app, paso[0])(*paso[1:])
+            except Exception:
+                pass
+        try:
+            app.PrintPlain('%s: %.1f s' % (nombre, time.perf_counter() - inicio))
+        except Exception:
+            pass

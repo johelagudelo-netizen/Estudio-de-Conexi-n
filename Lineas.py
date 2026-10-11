@@ -14,29 +14,23 @@ def Funcion(Fichero):
     Lineas= Lineas.dropna(axis=1, how='all')
     Folder_Tipos = app.GetProjectFolder('equip')
     red= app.GetCalcRelevantObjects('*.ElmNet')[1]
+    # Se consultan los tipos y nodos una sola vez (antes se buscaban en toda la base por cada línea)
+    Tipos = config_powerfactory.indexar_por_nombre(Folder_Tipos.GetContents('*.TypLne'))
+    Buses = config_powerfactory.indexar_por_nombre(app.GetCalcRelevantObjects('*.ElmTerm'))
+    Contadores = {}
     for i, Linea in Lineas.iterrows():
         Tipo=Linea['CONDUCTOR']
-        Tipo_Linea=Folder_Tipos.GetContents(str(Tipo) + '.TypLne')[0]
+        Tipo_Linea=config_powerfactory.buscar(Tipos, str(Tipo), 'el tipo de línea')
         Nueva_Linea= red.CreateObject('ElmLne', Linea['NOMBRE'])
         Nueva_Linea.dline=Linea['LONGITUD']/1000
         Nueva_Linea.typ_id=Tipo_Linea
-        Nombre_Bus1=Linea['NODO1']
-        Nombre_Bus2=Linea['NODO2']
-        str_Nombre_Bus1= str(Nombre_Bus1)+".ElmTerm"
-        str_Nombre_Bus2= str(Nombre_Bus2)+".ElmTerm"
-        Bus1=app.GetCalcRelevantObjects(str_Nombre_Bus1)[0]
-        Bus2=app.GetCalcRelevantObjects(str_Nombre_Bus2)[0]
-        Cubs_b1=Bus1.GetContents()
-        Cubs_b2=Bus2.GetContents()
-        N_Cubs_b1=len(Cubs_b1)
-        N_Cubs_b2=len(Cubs_b2)
-        texto1 = "Cub_" + str(N_Cubs_b1+1)
-        texto2 = "Cub_" + str(N_Cubs_b2+1)
+        Bus1=config_powerfactory.buscar(Buses, str(Linea['NODO1']), 'el nodo')
+        Bus2=config_powerfactory.buscar(Buses, str(Linea['NODO2']), 'el nodo')
+        texto1 = config_powerfactory.siguiente_cubiculo(Bus1, Contadores)
+        texto2 = config_powerfactory.siguiente_cubiculo(Bus2, Contadores)
         Cub1_Linea=Bus1.CreateObject('StaCubic',texto1)
         Cub2_Linea=Bus2.CreateObject('StaCubic',texto2)
         Nueva_Linea.bus1=Cub1_Linea
         Nueva_Linea.bus2=Cub2_Linea
-        app.PrintPlain(Nueva_Linea)
-        app.PrintPlain(i)
     app.PrintPlain('Lineas Creadas')
 
