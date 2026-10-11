@@ -88,7 +88,7 @@ Curva_Proyecto=Curva_PGF()
 class App:
     def __init__(self, root):
         self.root = root
-        self.root.title("WE POWER")
+        self.root.title("Aplicativo de EDC")
 
         width = 600
         height = 500
@@ -99,7 +99,7 @@ class App:
         root.geometry(alignstr)
         root.resizable(width=False, height=False)
 
-        GLabel_1 = tk.Label(root, text="ESTUDIOS DE CONEXIÓN SIMPLIFICADOS WE - POWER", \
+        GLabel_1 = tk.Label(root, text="APLICATIVO DE EDC - ESTUDIOS DE CONEXIÓN SIMPLIFICADOS", \
                              bg="#d68017", fg="#333333", justify="center")
         GLabel_1.place(x=100, y=10, width=400, height=50)
 
@@ -259,7 +259,7 @@ class App:
    
     def open_Tercer_window(self):
         root3 = tk.Toplevel(self.root)
-        root3.title("WE POWER 2")
+        root3.title("Aplicativo de EDC 2")
         width = 1000
         height = 600
         screenwidth = root3.winfo_screenwidth()
@@ -268,7 +268,7 @@ class App:
                                     (screenheight - height) / 2)
         root3.geometry(alignstr)
         root3.resizable(width=False, height=False)
-        GLabel_5 = tk.Label(root3, text="ESTUDIOS DE CONEXIÓN SIMPLIFICADOS WE - POWER", \
+        GLabel_5 = tk.Label(root3, text="APLICATIVO DE EDC - ESTUDIOS DE CONEXIÓN SIMPLIFICADOS", \
                              bg="#d68017", fg="#333333", justify="center")
         GLabel_5.place(x=100, y=10, width=800, height=50)
 
@@ -477,7 +477,7 @@ class App:
     def open_second_window(self):
         Archivo=self.Nombre_Fichero
         root2 = tk.Toplevel(self.root)
-        root2.title("WE POWER 2")
+        root2.title("Aplicativo de EDC 2")
         width = 1000
         height = 600
         screenwidth = root2.winfo_screenwidth()
@@ -486,7 +486,7 @@ class App:
                                     (screenheight - height) / 2)
         root2.geometry(alignstr)
         root2.resizable(width=False, height=False)
-        GLabel_5 = tk.Label(root2, text="ESTUDIOS DE CONEXIÓN SIMPLIFICADOS WE - POWER", \
+        GLabel_5 = tk.Label(root2, text="APLICATIVO DE EDC - ESTUDIOS DE CONEXIÓN SIMPLIFICADOS", \
                              bg="#d68017", fg="#333333", justify="center")
         GLabel_5.place(x=100, y=10, width=800, height=50)
 
@@ -830,7 +830,7 @@ class App:
     
     def open_Cordinacion_window(self):
         root4 = tk.Toplevel(self.root)
-        root4.title("WE POWER COORDINACIÓN")
+        root4.title("Aplicativo de EDC - Coordinación")
         width = 650
         height = 500
         screenwidth = root4.winfo_screenwidth()
