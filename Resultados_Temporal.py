@@ -16,7 +16,7 @@ def Funcion(Lista_Frames_Fase,Lista_Frames_Tierra,Lista_Frames_Tensiones,\
     from openpyxl.utils import get_column_letter
 
     import sys
-    sys.path.append(r'C:\Program Files\DIgSILENT\PowerFactory 2021 SP2\Python\3.9')
+    import config_powerfactory  # ruta de PowerFactory: ver config_powerfactory.py
     import powerfactory as pf
     app = pf.GetApplication()
 

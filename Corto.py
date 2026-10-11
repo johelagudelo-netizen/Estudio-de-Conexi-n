@@ -7,7 +7,7 @@ Created on Mon Mar 11 18:30:58 2024
 
 def Funcion(Años,Lista_Variaciones, Lista_Diagramas, Direccion_Pdfs, Direccion_Excel):
     import sys
-    sys.path.append(r'C:\Program Files\DIgSILENT\PowerFactory 2021 SP2\Python\3.9')
+    import config_powerfactory  # ruta de PowerFactory: ver config_powerfactory.py
     import powerfactory as pf
     import pandas as pd
     from datetime import datetime

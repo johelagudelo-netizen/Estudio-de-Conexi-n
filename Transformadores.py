@@ -6,7 +6,7 @@ Created on Tue Feb 13 10:56:25 2024
 """
 def Funcion(Fichero):
     import sys
-    sys.path.append(r'C:\Program Files\DIgSILENT\PowerFactory 2021 SP2\Python\3.9')
+    import config_powerfactory  # ruta de PowerFactory: ver config_powerfactory.py
     import powerfactory as pf
     import pandas as pd
     app = pf.GetApplication()

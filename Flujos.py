@@ -6,7 +6,7 @@ Created on Tue Feb 20 16:28:31 2024
 """
 def Funcion(Fichero,Lista_Variaciones,Escenarios,Años,Hora,Impresion,Ruta_Pdfs,Ruta_Excel):
     import sys
-    sys.path.append(r'C:\Program Files\DIgSILENT\PowerFactory 2021 SP2\Python\3.9')
+    import config_powerfactory  # ruta de PowerFactory: ver config_powerfactory.py
     import powerfactory as pf
     import pandas as pd
     from datetime import datetime

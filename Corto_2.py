@@ -7,14 +7,14 @@ Created on Mon Mar 11 18:30:58 2024
 
 def Funcion(Pt_Cabecera,Pt_Curva_PGF, Lista_Cortos,Delta_Fase,Delta_Tierra):
     import sys
-    sys.path.append(r'C:\Program Files\DIgSILENT\PowerFactory 2021 SP2\Python\3.9')
+    import config_powerfactory  # ruta de PowerFactory: ver config_powerfactory.py
     import powerfactory as pf
     import pandas as pd
     import numpy as np
     from datetime import datetime
 
     import sys
-    sys.path.append(r'C:\Program Files\DIgSILENT\PowerFactory 2021 SP2\Python\3.9')
+    import config_powerfactory  # ruta de PowerFactory: ver config_powerfactory.py
     import powerfactory as pf
     app = pf.GetApplication()
 

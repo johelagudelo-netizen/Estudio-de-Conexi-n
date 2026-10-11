@@ -9,7 +9,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 import sys
-sys.path.append(r'C:\Program Files\DIgSILENT\PowerFactory 2021 SP2\Python\3.9')
+import config_powerfactory  # ruta de PowerFactory: ver config_powerfactory.py
 import powerfactory as pf
 app = pf.GetApplication()
 

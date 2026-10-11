@@ -4,9 +4,15 @@ from tkinter import messagebox
 from tkinter import filedialog
 import sys
 import pandas as pd
-sys.path.append(r'C:\Program Files\DIgSILENT\PowerFactory 2021 SP2\Python\3.9')
-import powerfactory as pf
-app = pf.GetApplication()
+try:
+    import config_powerfactory  # ruta de PowerFactory: ver config_powerfactory.py
+    import powerfactory as pf
+    app = pf.GetApplication()
+except Exception as error:
+    _raiz = tk.Tk()
+    _raiz.withdraw()
+    messagebox.showerror('PowerFactory no disponible', str(error))
+    sys.exit(1)
 
 class Cabecera:
      def __init__(self):

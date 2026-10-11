@@ -1,7 +1,7 @@
 def Funcion(Lista_Frame,Pt_Cabecera,Pt_Curva_PGF,Delta_Fase,Delta_Tierra):
     import pandas as pd
     import sys
-    sys.path.append(r'C:\Program Files\DIgSILENT\PowerFactory 2021 SP2\Python\3.9')
+    import config_powerfactory  # ruta de PowerFactory: ver config_powerfactory.py
     import powerfactory as pf
     app = pf.GetApplication()
     Folder_Variaciones=app.GetProjectFolder('scheme')
