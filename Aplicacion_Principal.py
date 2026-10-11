@@ -3,16 +3,42 @@ import tkinter.font as tkFont
 from tkinter import messagebox
 from tkinter import filedialog
 import sys
-import pandas as pd
-try:
-    import config_powerfactory  # ruta de PowerFactory: ver config_powerfactory.py
-    import powerfactory as pf
-    app = pf.GetApplication()
-except Exception as error:
-    _raiz = tk.Tk()
-    _raiz.withdraw()
-    messagebox.showerror('PowerFactory no disponible', str(error))
-    sys.exit(1)
+
+
+class _PowerFactoryDiferido:
+    """Se conecta a PowerFactory la primera vez que se usa.
+
+    Conectar (y cargar pandas) tarda varios segundos; así la ventana aparece de
+    inmediato y la conexión se hace justo después (ver conectar_powerfactory).
+    """
+    _app = None
+
+    def _conectar(self):
+        if self._app is None:
+            import config_powerfactory  # ruta de PowerFactory: ver config_powerfactory.py
+            import powerfactory as pf
+            self._app = pf.GetApplication()
+        return self._app
+
+    def __getattr__(self, nombre):
+        return getattr(self._conectar(), nombre)
+
+
+app = _PowerFactoryDiferido()
+
+
+def conectar_powerfactory(raiz):
+    titulo = raiz.title()
+    raiz.title(titulo + ' - conectando con PowerFactory...')
+    raiz.update_idletasks()
+    try:
+        app._conectar()
+    except Exception as error:
+        messagebox.showerror('PowerFactory no disponible', str(error))
+        raiz.destroy()
+        return
+    raiz.title(titulo)
+
 
 class Cabecera:
      def __init__(self):
@@ -203,6 +229,7 @@ class App:
         print(Valor)
         if Valor !=None:
             messagebox.showinfo('Proyecto Activo', ' Puede empezar a crear la red en el proyecto Activo')
+            import config_powerfactory
             with config_powerfactory.modo_rapido(app, 'Construir red'):
                 import Tipo_Lineas
                 Tipo_Lineas.Funcion(self.Nombre_Fichero)
@@ -520,6 +547,7 @@ class App:
                               justify="center")
         GLabel_3.place(x=425, y=75, width=50, height=20)
 
+        import pandas as pd
         Escenarios=pd.read_excel(Archivo, sheet_name='Proyecciones_Demanda')
         opciones_Demanda=Escenarios.columns[1:].tolist()  
         # Crear un frame contenedor
@@ -785,6 +813,7 @@ class App:
 
     def GButton_17_command(self):
         print("Caracteristicas")
+        import pandas as pd
         Cargas= pd.read_excel(self.Nombre_Fichero, sheet_name='Cargas')
         Caracteristicas_Circuito=pd.read_excel(self.Nombre_Fichero, sheet_name='Char_Tiempo')
         Caracteristicas_Circuito = Caracteristicas_Circuito.dropna(axis=1, how='all')
@@ -1306,4 +1335,5 @@ class App:
 if __name__ == "__main__":
     root = tk.Tk()
     Aplicacion = App(root)
+    root.after(100, lambda: conectar_powerfactory(root))
     root.mainloop()
